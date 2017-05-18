@@ -1,6 +1,6 @@
-##Volumes
+# Volumes
 
-###Describing volumes
+## Describing volumes
 
 ```
 aws ec2 describe-volumes
@@ -18,34 +18,34 @@ aws ec2 describe-volumes --filters  Name=attachment.status,Values=attaching | at
 aws ec2 describe-volumes --filters Name:'tag:Name',Values: ['some_values'] --profile <your_profile_name>
 ```
 
-### Describing volumes using a different aws user profile
+## Describing volumes using a different aws user profile
 
 ```
 aws ec2 describe-volumes --filters  Name=status,Values=in-use  --profile <your_profile_name>
 ```
 
-### Listing available volumes ids
+## Listing available volumes ids
 
 ```
 aws ec2 describe-volumes --filters  Name=status,Values=available  --profile <your_profile_name>|grep VolumeId|awk '{print $2}' | tr '\n|,|"' ' '
 ```
 
 
-### Deleting a volume
+## Deleting a volume
 
 ```
 aws ec2 delete-volume --region eu-west-1 --volume-id vol-0bbed7fb364e168d2
 ```
 
 
-### Deleting unused volumes (think before you type)
+## Deleting unused volumes (think before you type)
 
 ```
 for x in $(aws ec2 describe-volumes --filters  Name=status,Values=available  --profile <your_profile_name>|grep VolumeId|awk '{print $2}' | tr ',|"' ' '); do aws ec2 delete-volume --region eu-west-1 --volume-id $x --profile <your_profile_name>; done
 ```
 
 
-### Creating a snapshot
+## Creating a snapshot
 
 ```
 aws ec2 create-snapshot --volume-id vol-051570739b83ce7da --profile <your_profile_name>
@@ -55,14 +55,14 @@ aws ec2 create-snapshot --volume-id vol-051570739b83ce7da --profile <your_profil
 aws ec2 create-snapshot --volume-id vol-051570739b83ce7da --description "incruizer-websites-einstein-snapshot-$(date +'%Y-%m-%d_%H-%M-%S')" --profile <your_profile_name>
 ```
 
-### Creating an image (AMI)
+## Creating an image (AMI)
 
 ```
 aws ec2 create-image --instance-id i-0ab8968eb4daa3859 --name "incruizer-websites-einstein-image-$(date +'%Y-%m-%d_%H-%M-%S')" --description "incruizer-websites-einstein-image-$(date +'%Y-%m-%d_%H-%M-%S')" --profile <your_profile_name>
 ```
 
 
-### Creating AMI without reboot
+## Creating AMI without reboot
 
 ```
 aws ec2 create-image --instance-id i-0ab8968eb4daa3859 --name "incruizer-websites-einstein-image-$(date +'%Y-%m-%d_%H-%M-%S')" --description "incruizer-websites-einstein-image-$(date +'%Y-%m-%d_%H-%M-%S')" --no-reboot --profile <your_profile_name>
