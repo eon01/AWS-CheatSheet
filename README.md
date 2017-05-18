@@ -1,3 +1,5 @@
+AWS Cheat Sheet **Work in progress - All contributions are welcome** 
+
 # Volumes
 
 ## Describing volumes
@@ -52,20 +54,20 @@ aws ec2 create-snapshot --volume-id vol-051570739b83ce7da --profile <your_profil
 ```
 
 ```
-aws ec2 create-snapshot --volume-id vol-051570739b83ce7da --description "incruizer-websites-einstein-snapshot-$(date +'%Y-%m-%d_%H-%M-%S')" --profile <your_profile_name>
+aws ec2 create-snapshot --volume-id vol-051570739b83ce7da --description "snapshot-$(date +'%Y-%m-%d_%H-%M-%S')" --profile <your_profile_name>
 ```
 
 ## Creating an image (AMI)
 
 ```
-aws ec2 create-image --instance-id i-0ab8968eb4daa3859 --name "incruizer-websites-einstein-image-$(date +'%Y-%m-%d_%H-%M-%S')" --description "incruizer-websites-einstein-image-$(date +'%Y-%m-%d_%H-%M-%S')" --profile <your_profile_name>
+aws ec2 create-image --instance-id i-0ab8968eb4daa3859 --name "image-$(date +'%Y-%m-%d_%H-%M-%S')" --description "image-$(date +'%Y-%m-%d_%H-%M-%S')" --profile <your_profile_name>
 ```
 
 
 ## Creating AMI without reboot
 
 ```
-aws ec2 create-image --instance-id i-0ab8968eb4daa3859 --name "incruizer-websites-einstein-image-$(date +'%Y-%m-%d_%H-%M-%S')" --description "incruizer-websites-einstein-image-$(date +'%Y-%m-%d_%H-%M-%S')" --no-reboot --profile <your_profile_name>
+aws ec2 create-image --instance-id i-0ab8968eb4daa3859 --name "image-$(date +'%Y-%m-%d_%H-%M-%S')" --description "image-$(date +'%Y-%m-%d_%H-%M-%S')" --no-reboot --profile <your_profile_name>
 ```
 
 # Lambda
