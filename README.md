@@ -50,11 +50,11 @@ for x in $(aws ec2 describe-volumes --filters  Name=status,Values=available  --p
 ## Creating a snapshot
 
 ```
-aws ec2 create-snapshot --volume-id vol-051570739b83ce7da --profile <your_profile_name>
+aws ec2 create-snapshot --volume-id <vol-id> --profile <your_profile_name>
 ```
 
 ```
-aws ec2 create-snapshot --volume-id vol-051570739b83ce7da --description "snapshot-$(date +'%Y-%m-%d_%H-%M-%S')" --profile <your_profile_name>
+aws ec2 create-snapshot --volume-id <vol-id> --description "snapshot-$(date +'%Y-%m-%d_%H-%M-%S')" --profile <your_profile_name>
 ```
 
 ## Creating an image (AMI)
