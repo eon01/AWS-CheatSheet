@@ -209,13 +209,13 @@ aws ec2 attach-internet-gateway --internet-gateway-id <igw_id> --vpc-id <vpc_id>
 
 ## Setting Up A NAT Gateway
 
-Allocate Elastic IP: 
+Allocate Elastic IP
 
 ``` 
 aws ec2 allocate-address --domain vpc --region <region> 
 ``` 
 
-then use the AllocationId to create the NAT Gateway for the public zone in <region>: 
+then use the AllocationId to create the NAT Gateway for the public zone in <region>
 
 ``` 
 aws ec2 create-nat-gateway --subnet-id <subnet_id> --allocation-id <allocation_id> --region <region> 
