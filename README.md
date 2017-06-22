@@ -243,7 +243,7 @@ Finally, associate the public subnet with the Route Table
 
 ``` 
 aws ec2 associate-route-table --route-table-id <route_table_id> --subnet-id <subnet_id> --region <region>
-```.
+```
 
 ## Creating A Private Route Tables
 
