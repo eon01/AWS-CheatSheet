@@ -209,18 +209,57 @@ aws ec2 attach-internet-gateway --internet-gateway-id <igw_id> --vpc-id <vpc_id>
 
 ## Setting Up A NAT Gateway
 
-Allocate Elastic IP ``` aws ec2 allocate-address --domain vpc --region <region> ``` then use the AllocationId to create the NAT Gateway for the public zone in <region>: ``` aws ec2 create-nat-gateway --subnet-id <subnet_id> --allocation-id <allocation_id> --region <region> ```
+Allocate Elastic IP: 
+``` 
+aws ec2 allocate-address --domain vpc --region <region> 
+``` 
+
+then use the AllocationId to create the NAT Gateway for the public zone in <region>: 
+
+``` 
+aws ec2 create-nat-gateway --subnet-id <subnet_id> --allocation-id <allocation_id> --region <region> 
+```
 
 # Route Tables
 
 ## Creating A Public Route Table
 
-Create the Route Table: ``` aws ec2 create-route-table --vpc-id <vpc_id> --region <region> ``` then create a route for an Internet Gateway. Now, use the outputted Route Table ID: ``` aws ec2 create-route --route-table-id <route_table_id> --destination-cidr-block 0.0.0.0/0 --gateway-id <igw_id> --region <region> ```.
+Create the Route Table: 
 
-Finally, associate the public subnet with the Route Table: ``` aws ec2 associate-route-table --route-table-id <route_table_id> --subnet-id <subnet_id> --region <region> ```.
+``` 
+aws ec2 create-route-table --vpc-id <vpc_id> --region <region> 
+``` 
+
+then create a route for an Internet Gateway. 
+
+Now, use the outputted Route Table ID: 
+
+``` 
+aws ec2 create-route --route-table-id <route_table_id> --destination-cidr-block 0.0.0.0/0 --gateway-id <igw_id> --region <region> 
+```
+
+Finally, associate the public subnet with the Route Table
+
+``` 
+aws ec2 associate-route-table --route-table-id <route_table_id> --subnet-id <subnet_id> --region <region>
+```.
 
 ## Creating A Private Route Tables
 
-Create the Route Table: ``` aws ec2 create-route-table --vpc-id <vpc_id> --region <region> ``` then create a route that points to a NAT Gateway ``` aws ec2 create-route --route-table-id <route_table_id> --destination-cidr-block 0.0.0.0/0 --nat-gateway-id <net_gateway_id> --region <region> ```.
+Create the Route Table
 
-Finally, associate the subnet ``` aws ec2 associate-route-table --route-table-id <route_table_id> --subnet-id <subnet_id> --region <region> ```.
+``` 
+aws ec2 create-route-table --vpc-id <vpc_id> --region <region> 
+``` 
+
+then create a route that points to a NAT Gateway 
+
+``` 
+aws ec2 create-route --route-table-id <route_table_id> --destination-cidr-block 0.0.0.0/0 --nat-gateway-id <net_gateway_id> --region <region> 
+```
+
+Finally, associate the subnet 
+
+``` 
+aws ec2 associate-route-table --route-table-id <route_table_id> --subnet-id <subnet_id> --region <region> 
+```
