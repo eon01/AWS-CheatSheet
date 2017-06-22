@@ -157,8 +157,70 @@ aws s3api list-buckets
 aws s3api list-buckets --query 'Buckets[].Name'
 ```
 
+# VPC
 
+## Creating A VPC
 
+```
+aws ec2 create-vpc --cidr-block <cidr_block> --regiosn <region>
+```
 
+e.g
 
+```
+aws ec2 create-vpc --cidr-block 10.0.0.0/16 --region eu-west-1
+```
 
+## Allowing DNS hostnames
+
+```
+aws ec2 modify-vpc-attribute --vpc-id <vpc_id> --enable-dns-hostnames "{\"Value\":true}" --region <region>
+```
+
+# Subnets 
+
+## Creating A Subnet
+
+```
+aws ec2 create-subnet --vpc-id <vpc_id> --cidr-block <cidr_block> --availability-zone <availability_zone> --region <region>
+```
+
+## Auto Assigning Public IPs To Instances In A Public Subnet
+
+```
+aws ec2 modify-subnet-attribute --subnet-id <subnet_id> --map-public-ip-on-launch --region <region>
+```
+
+# Internet Gateway
+
+## Creating An IGW
+
+```
+aws ec2 create-internet-gateway --region <region>
+```
+
+## Attaching An IGW to A VPC
+
+```
+aws ec2 attach-internet-gateway --internet-gateway-id <igw_id> --vpc-id <vpc_id> --region <region>
+```
+
+# NAT
+
+## Setting Up A NAT Gateway
+
+Allocate Elastic IP ``` aws ec2 allocate-address --domain vpc --region <region> ``` then use the AllocationId to create the NAT Gateway for the public zone in <region>: ``` aws ec2 create-nat-gateway --subnet-id <subnet_id> --allocation-id <allocation_id> --region <region> ```
+
+# Route Tables
+
+## Creating A Public Route Table
+
+Create the Route Table: ``` aws ec2 create-route-table --vpc-id <vpc_id> --region <region> ``` then create a route for an Internet Gateway. Now, use the outputted Route Table ID: ``` aws ec2 create-route --route-table-id <route_table_id> --destination-cidr-block 0.0.0.0/0 --gateway-id <igw_id> --region <region> ```.
+
+Finally, associate the public subnet with the Route Table: ``` aws ec2 associate-route-table --route-table-id <route_table_id> --subnet-id <subnet_id> --region <region> ```.
+
+## Creating A Private Route Tables
+
+Create the Route Table: ``` aws ec2 create-route-table --vpc-id <vpc_id> --region <region> ``` then create a route that points to a NAT Gateway ``` aws ec2 create-route --route-table-id <route_table_id> --destination-cidr-block 0.0.0.0/0 --nat-gateway-id <net_gateway_id> --region <region> ```.
+
+Finally, associate the subnet ``` aws ec2 associate-route-table --route-table-id <route_table_id> --subnet-id <subnet_id> --region <region> ```.
