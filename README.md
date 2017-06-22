@@ -36,14 +36,14 @@ aws ec2 describe-volumes --filters  Name=status,Values=available  --profile <you
 ## Deleting a volume
 
 ```
-aws ec2 delete-volume --region eu-west-1 --volume-id vol-0bbed7fb364e168d2
+aws ec2 delete-volume --region <region> --volume-id <volume_id>
 ```
 
 
 ## Deleting unused volumes (think before you type)
 
 ```
-for x in $(aws ec2 describe-volumes --filters  Name=status,Values=available  --profile <your_profile_name>|grep VolumeId|awk '{print $2}' | tr ',|"' ' '); do aws ec2 delete-volume --region eu-west-1 --volume-id $x --profile <your_profile_name>; done
+for x in $(aws ec2 describe-volumes --filters  Name=status,Values=available  --profile <your_profile_name>|grep VolumeId|awk '{print $2}' | tr ',|"' ' '); do aws ec2 delete-volume --region <region> --volume-id $x --profile <your_profile_name>; done
 ```
 
 
@@ -60,14 +60,14 @@ aws ec2 create-snapshot --volume-id <vol-id> --description "snapshot-$(date +'%Y
 ## Creating an image (AMI)
 
 ```
-aws ec2 create-image --instance-id i-0ab8968eb4daa3859 --name "image-$(date +'%Y-%m-%d_%H-%M-%S')" --description "image-$(date +'%Y-%m-%d_%H-%M-%S')" --profile <your_profile_name>
+aws ec2 create-image --instance-id <instance_id> --name "image-$(date +'%Y-%m-%d_%H-%M-%S')" --description "image-$(date +'%Y-%m-%d_%H-%M-%S')" --profile <your_profile_name>
 ```
 
 
 ## Creating AMI without reboot
 
 ```
-aws ec2 create-image --instance-id i-0ab8968eb4daa3859 --name "image-$(date +'%Y-%m-%d_%H-%M-%S')" --description "image-$(date +'%Y-%m-%d_%H-%M-%S')" --no-reboot --profile <your_profile_name>
+aws ec2 create-image --instance-id <instance_id> --name "image-$(date +'%Y-%m-%d_%H-%M-%S')" --description "image-$(date +'%Y-%m-%d_%H-%M-%S')" --no-reboot --profile <your_profile_name>
 ```
 
 # Lambda
@@ -75,7 +75,7 @@ aws ec2 create-image --instance-id i-0ab8968eb4daa3859 --name "image-$(date +'%Y
 ## Using AWS Lambda with Scheduled Events
 
 ```
-sid=Sid$(date +%Y%m%d%H%M%S); aws lambda add-permission --statement-id $sid --action 'lambda:InvokeFunction' --principal events.amazonaws.com --source-arn arn:aws:events:eu-west-1:<953414735923>:rule/AWSLambdaBasicExecutionRole --function-name function:<awsents> --region eu-west-1
+sid=Sid$(date +%Y%m%d%H%M%S); aws lambda add-permission --statement-id $sid --action 'lambda:InvokeFunction' --principal events.amazonaws.com --source-arn arn:aws:events:<region>:<arn>:rule/AWSLambdaBasicExecutionRole --function-name function:<awsents> --region <region>
 ```
 
 
