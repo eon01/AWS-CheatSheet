@@ -210,6 +210,7 @@ aws ec2 attach-internet-gateway --internet-gateway-id <igw_id> --vpc-id <vpc_id>
 ## Setting Up A NAT Gateway
 
 Allocate Elastic IP: 
+
 ``` 
 aws ec2 allocate-address --domain vpc --region <region> 
 ``` 
