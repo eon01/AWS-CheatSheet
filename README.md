@@ -137,12 +137,17 @@ aws ec2 describe-images --owners amazon
 
 ## Using Filters:
 
+e.g: Describing Windows AMIs that are backed by Amazon EBS.
+
 ```
 aws ec2 describe-images --filters "Name=platform,Values=windows" "Name=root-device-type,Values=ebs"
 ```
 
+e.g: Describing Ubuntu AMIs 
 
-
+```
+aws ec2 describe-images --filters "Name=name,Values=ubuntu*"
+```
 
 # Lambda
 
