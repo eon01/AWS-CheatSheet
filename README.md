@@ -8,13 +8,35 @@ AWS Cheat Sheet **Work in progress - All contributions are welcome**
 aws ec2 describe-volumes
 ```
 
+Describing filtered volumes:
+
 ```
 aws ec2 describe-volumes --filters  Name=status,Values=creating | available | in-use | deleting | deleted | error
 ```
 
+
+e.g, describing all deleted volumes:
+
+```
+aws ec2 describe-volumes --filters  Name=status,Values=deleted
+```
+
+Filters can be applied to the attachment status:
+
 ```
 aws ec2 describe-volumes --filters  Name=attachment.status,Values=attaching | attached | detaching | detached
 ```
+
+e.g: describing all volumes with the status "attaching":
+
+
+```
+aws ec2 describe-volumes --filters  Name=attachment.status,Values=attaching
+```
+
+
+This is the generic form. Use --profile ```<your_profile_name> ```, if you have multiple AWS profiles or accounts.
+
 
 ```
 aws ec2 describe-volumes --filters Name:'tag:Name',Values: ['some_values'] --profile <your_profile_name>
@@ -26,49 +48,101 @@ aws ec2 describe-volumes --filters Name:'tag:Name',Values: ['some_values'] --pro
 aws ec2 describe-volumes --filters  Name=status,Values=in-use  --profile <your_profile_name>
 ```
 
-### Listing available volumes ids
+### Listing Available Volumes IDs
+
+
+```
+aws ec2 describe-volumes --filters  Name=status,Values=available |grep VolumeId|awk '{print $2}' | tr '\n|,|"' ' '
+```
+
+With "profile":
 
 ```
 aws ec2 describe-volumes --filters  Name=status,Values=available  --profile <your_profile_name>|grep VolumeId|awk '{print $2}' | tr '\n|,|"' ' '
 ```
 
 
-### Deleting a volume
+### Deleting a Volume
 
 ```
 aws ec2 delete-volume --region <region> --volume-id <volume_id>
 ```
 
 
-### Deleting unused volumes (think before you type)
+### Deleting Unused Volumes.. Think Before You Type :-)
+
+
+```
+for x in $(aws ec2 describe-volumes --filters  Name=status,Values=available  --profile <your_profile_name>|grep VolumeId|awk '{print $2}' | tr ',|"' ' '); do aws ec2 delete-volume --region <region> --volume-id $x; done
+```
+
+With "profile":
 
 ```
 for x in $(aws ec2 describe-volumes --filters  Name=status,Values=available  --profile <your_profile_name>|grep VolumeId|awk '{print $2}' | tr ',|"' ' '); do aws ec2 delete-volume --region <region> --volume-id $x --profile <your_profile_name>; done
 ```
 
 
-### Creating a snapshot
+### Creating a Snapshot
 
 ```
-aws ec2 create-snapshot --volume-id <vol-id> --profile <your_profile_name>
+aws ec2 create-snapshot --volume-id <vol-id>
 ```
 
 ```
-aws ec2 create-snapshot --volume-id <vol-id> --description "snapshot-$(date +'%Y-%m-%d_%H-%M-%S')" --profile <your_profile_name>
+aws ec2 create-snapshot --volume-id <vol-id> --description "snapshot-$(date +'%Y-%m-%d_%H-%M-%S')"
 ```
 
-### Creating an image (AMI)
+### Creating an Image (AMI)
 
 ```
-aws ec2 create-image --instance-id <instance_id> --name "image-$(date +'%Y-%m-%d_%H-%M-%S')" --description "image-$(date +'%Y-%m-%d_%H-%M-%S')" --profile <your_profile_name>
+aws ec2 create-image --instance-id <instance_id> --name "image-$(date +'%Y-%m-%d_%H-%M-%S')" --description "image-$(date +'%Y-%m-%d_%H-%M-%S')"
 ```
 
 
-### Creating AMI without reboot
+### Creating AMI Without Rebooting the Machine
 
 ```
-aws ec2 create-image --instance-id <instance_id> --name "image-$(date +'%Y-%m-%d_%H-%M-%S')" --description "image-$(date +'%Y-%m-%d_%H-%M-%S')" --no-reboot --profile <your_profile_name>
+aws ec2 create-image --instance-id <instance_id> --name "image-$(date +'%Y-%m-%d_%H-%M-%S')" --description "image-$(date +'%Y-%m-%d_%H-%M-%S')" --no-reboot
 ```
+
+You are free to change the AMI name ``` image-$(date +'%Y-%m-%d_%H-%M-%S') ``` to a name of your choice.
+
+
+# AMIs
+
+## Listing AMIs:
+
+```
+aws ec2 describe-images
+```
+
+## Describing Specefic AMI(s):
+
+```
+aws ec2 describe-images --image-ids <image_id> --profile <profile> --region <region>
+```
+
+e.g: 
+
+```
+aws ec2 describe-images --image-ids ami-e24dfa9f --profile terraform --region eu-west-3
+```
+
+## Listing Amazon AMIs:
+
+```
+aws ec2 describe-images --owners amazon 
+```
+
+## Using Filters:
+
+```
+aws ec2 describe-images --filters "Name=platform,Values=windows" "Name=root-device-type,Values=ebs"
+```
+
+
+
 
 # Lambda
 
@@ -91,7 +165,7 @@ aws iam list-users
 ### List Policies
 
 ```
-aws  iam list-policies
+aws iam list-policies
 ```
 
 ### List Groups
@@ -100,14 +174,14 @@ aws  iam list-policies
 aws iam list-groups
 ```
 
-### Get Users In A Group
+### Get Users in a  Group
 
 ```
 aws iam get-group --group-name <group_name>
 ```
 
 
-### Describing A Policy
+### Describing a Policy
 
 ```
 aws iam get-policy --policy-arn arn:aws:iam::aws:policy/<policy_name>
@@ -128,14 +202,14 @@ aws iam list-access-keys
 ```
 
 
-### List The Access Key IDs For An IAM User
+### List the Access Key IDs for an IAM User
 
 ```
 aws iam list-access-keys --user-name <user_name>
 ```
 
 
-### List The SSH Public Keys For A User
+### List the SSH Public Keys for a User
 
 ```
 aws iam list-ssh-public-keys --user-name <user_name>
@@ -264,3 +338,34 @@ Finally, associate the subnet
 ``` 
 aws ec2 associate-route-table --route-table-id <route_table_id> --subnet-id <subnet_id> --region <region> 
 ```
+
+# CloudFront
+
+### Listing Distributions
+
+In some cases, you need to setup this first:
+
+```
+aws configure set preview.cloudfront true
+```
+
+Then:
+
+```
+aws cloudfront list-distributions
+```
+
+### Invalidating Files From a Distribution
+
+To invalidate index and error HTML files from the distribution with the ID Z2W2LX9VBMAPRX:
+
+```
+aws cloudfront create-invalidation --distribution-id Z2W2LX9VBMAPRX  --paths /index.html /error.html
+```
+
+To invalidate everything in the distribution:
+
+```
+aws cloudfront create-invalidation --distribution-id Z2W2LX9VBMAPRX  --paths '/*'
+```
+
