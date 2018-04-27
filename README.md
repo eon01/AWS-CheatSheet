@@ -277,7 +277,7 @@ aws s3 ls s3://practicalaws.com --region eu-west-1
 aws s3 ls s3://practicalaws.com --region eu-west-1 --profile eon01
 ```
 
-### Syncing a Local Folder With a Bucket
+### Syncing a Local Folder with a Bucket
 
 ```
 aws s3 sync <local_path> s3://<bucket_name> 
@@ -290,7 +290,7 @@ e.g
 aws s3 sync . s3://practicalaws.com --region eu-west-1
 ```
 
-### Removing a File From a Bucket
+### Removing a File from a Bucket
 
 ```
 aws s3 rm s3://<bucket_name>/<object_name>
@@ -302,7 +302,7 @@ e.g
 aws s3 rm s3://practicalaws.com/temp.txt
 ```
 
-### Deleting a Bucket
+### Deleting a Bucket
 
 ```
 aws s3 rb s3://<bucket_name> --force
@@ -316,7 +316,7 @@ e.g
 aws s3 rb s3://practicalaws.com --force  
 ```
 
-### Emptying a Bucket
+### Emptying a Bucket
 
 ```
 aws s3 rm s3://<bucket_name>/<key_name> --recursive
