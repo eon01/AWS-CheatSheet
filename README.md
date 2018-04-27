@@ -111,13 +111,13 @@ You are free to change the AMI name ``` image-$(date +'%Y-%m-%d_%H-%M-%S') ``` t
 
 # AMIs
 
-## Listing AMIs
+### Listing AMI(s)
 
 ```
 aws ec2 describe-images
 ```
 
-## Describing Specefic AMI(s)
+### Describing AMI(s)
 
 ```
 aws ec2 describe-images --image-ids <image_id> --profile <profile> --region <region>
@@ -129,13 +129,13 @@ e.g:
 aws ec2 describe-images --image-ids ami-e24dfa9f --profile terraform --region eu-west-3
 ```
 
-## Listing Amazon AMIs
+### Listing Amazon AMIs
 
 ```
 aws ec2 describe-images --owners amazon 
 ```
 
-## Using Filters
+### Using Filters
 
 e.g: Describing Windows AMIs that are backed by Amazon EBS.
 
