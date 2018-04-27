@@ -229,11 +229,111 @@ aws iam list-ssh-public-keys --user-name <user_name>
 aws s3api list-buckets
 ```
 
+Or
+
+```
+aws s3 ls
+```
+
+
+e.g
+
+```
+aws s3 ls --profile eon01
+```
+
 
 ### Listing Only Bucket Names
 
 ```
 aws s3api list-buckets --query 'Buckets[].Name'
+```
+
+### Getting a Bucket Region
+
+```
+aws s3api get-bucket-location --bucket <bucket_name>
+```
+
+e.g
+
+```
+aws s3api get-bucket-location --bucket practicalaws.com
+```
+
+### Listing the Content of a Bucket
+
+```
+aws s3 ls s3://<bucket_name> --region <region>
+```
+
+e.g
+
+```
+aws s3 ls s3://practicalaws.com
+
+aws s3 ls s3://practicalaws.com --region eu-west-1
+ 
+aws s3 ls s3://practicalaws.com --region eu-west-1 --profile eon01
+```
+
+### Syncing a Local Folder With a Bucket
+
+```
+aws s3 sync <local_path> s3://<bucket_name> 
+```
+
+
+e.g
+
+```
+aws s3 sync . s3://practicalaws.com --region eu-west-1
+```
+
+### Removing a File From a Bucket
+
+```
+aws s3 rm s3://<bucket_name>/<object_name>
+```
+
+e.g
+
+```
+aws s3 rm s3://practicalaws.com/temp.txt
+```
+
+### Deleting a Bucket
+
+```
+aws s3 rb s3://<bucket_name> --force
+```
+
+If the bucket is not empty, use --force.
+
+e.g
+
+```
+aws s3 rb s3://practicalaws.com --force  
+```
+
+### Emptying a Bucket
+
+```
+aws s3 rm s3://<bucket_name>/<key_name> --recursive
+```
+
+e.g
+
+In order to remove tempfiles/file1.txt and tempfiles/file2.txt from practicalaws.com bucket, use:
+
+```
+aws s3 rm s3://practicalaws.com/tempfiles --recursive
+```
+
+Remove all objects using:
+
+```
+aws s3 rm s3://practicalaws.com/tempfiles
 ```
 
 # VPC
