@@ -109,7 +109,7 @@ aws ec2 create-image --instance-id <instance_id> --name "image-$(date +'%Y-%m-%d
 You are free to change the AMI name ``` image-$(date +'%Y-%m-%d_%H-%M-%S') ``` to a name of your choice.
 
 
-# AMIs
+# AMIs
 
 ## Listing AMIs
 
