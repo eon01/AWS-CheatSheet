@@ -242,7 +242,6 @@ e.g
 aws s3 ls --profile eon01
 ```
 
-
 ### Listing Only Bucket Names
 
 ```
@@ -283,11 +282,53 @@ aws s3 ls s3://practicalaws.com --region eu-west-1 --profile eon01
 aws s3 sync <local_path> s3://<bucket_name> 
 ```
 
-
 e.g
 
 ```
 aws s3 sync . s3://practicalaws.com --region eu-west-1
+```
+
+### Copying Files
+
+```
+aws s3 cp <file_name> s3://<bucket_name>
+```
+
+Or:
+
+```
+aws s3 cp <file_name> s3://<bucket_name>/<folder_name>/
+```
+
+To copy all files from a filder, look at "Copying Folders". Or use the following example, where I copy the content of the folder "images (contains images) in the remote folder "images".
+
+```
+cd images
+aws s3 cp . s3://saltstackfordevops.com/images --recursive --region us-east-2
+```
+
+### Copying Folders
+
+```
+aws s3 cp <folder_name>/ s3://<bucket_name>/ --recursive
+```
+
+To exclude files:
+
+```
+aws s3 cp <folder_name>/ s3://<bucket_name>/ --recursive --exclude "<file_name_or_a_wildcard>" 
+```
+
+e.g: To only include a certain type of files (PNG) and exclude others (JPG)
+
+```
+aws s3 cp practicalaws.com/ s3://practicalaws-backup/  --recursive --exclude "*.jpg"  --include "*.png"
+```
+
+e.g: To exclude a folder
+
+```
+aws s3 cp practicalaws.com/ s3://practicalaws-backup/ --recursive --exclude ".git/*" 
 ```
 
 ### Removing a File from a Bucket
