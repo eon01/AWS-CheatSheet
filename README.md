@@ -248,7 +248,8 @@ aws s3 ls --profile eon01
 aws s3api list-buckets --query 'Buckets[].Name'
 ```
 
-### Getting a Bucket Region
+
+### Getting a Bucket Region
 
 ```
 aws s3api get-bucket-location --bucket <bucket_name>
@@ -260,7 +261,8 @@ e.g
 aws s3api get-bucket-location --bucket practicalaws.com
 ```
 
-### Listing the Content of a Bucket
+
+### Listing the Content of a Bucket
 
 ```
 aws s3 ls s3://<bucket_name> --region <region>
@@ -276,7 +278,7 @@ aws s3 ls s3://practicalaws.com --region eu-west-1
 aws s3 ls s3://practicalaws.com --region eu-west-1 --profile eon01
 ```
 
-### Syncing a Local Folder with a Bucket
+### Syncing a Local Folder with a Bucket
 
 ```
 aws s3 sync <local_path> s3://<bucket_name> 
@@ -288,7 +290,7 @@ e.g
 aws s3 sync . s3://practicalaws.com --region eu-west-1
 ```
 
-### Copying Files
+### Copying Files
 
 ```
 aws s3 cp <file_name> s3://<bucket_name>
@@ -307,7 +309,7 @@ cd images
 aws s3 cp . s3://saltstackfordevops.com/images --recursive --region us-east-2
 ```
 
-### Copying Folders
+### Copying Folders
 
 ```
 aws s3 cp <folder_name>/ s3://<bucket_name>/ --recursive
