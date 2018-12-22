@@ -1,4 +1,4 @@
-AWS Cheat Sheet **Work in progress - All contributions are welcome** 
+AWS Cheat Sheet **Work in progress - All contributions are welcome**
 
 # Volumes
 
@@ -123,7 +123,7 @@ aws ec2 describe-images
 aws ec2 describe-images --image-ids <image_id> --profile <profile> --region <region>
 ```
 
-e.g: 
+e.g:
 
 ```
 aws ec2 describe-images --image-ids ami-e24dfa9f --profile terraform --region eu-west-3
@@ -132,7 +132,7 @@ aws ec2 describe-images --image-ids ami-e24dfa9f --profile terraform --region eu
 ### Listing Amazon AMIs
 
 ```
-aws ec2 describe-images --owners amazon 
+aws ec2 describe-images --owners amazon
 ```
 
 ### Using Filters
@@ -143,7 +143,7 @@ e.g: Describing Windows AMIs that are backed by Amazon EBS.
 aws ec2 describe-images --filters "Name=platform,Values=windows" "Name=root-device-type,Values=ebs"
 ```
 
-e.g: Describing Ubuntu AMIs 
+e.g: Describing Ubuntu AMIs
 
 ```
 aws ec2 describe-images --filters "Name=name,Values=ubuntu*"
@@ -161,7 +161,7 @@ sid=Sid$(date +%Y%m%d%H%M%S); aws lambda add-permission --statement-id $sid --ac
 # IAM
 
 ### List Users
- 
+
 ```
 aws iam list-users
 ```
@@ -192,20 +192,11 @@ aws iam get-group --group-name <group_name>
 aws iam get-policy --policy-arn arn:aws:iam::aws:policy/<policy_name>
 ```
 
-
 ### List Access Keys
 
 ```
 aws iam list-access-keys
 ```
-
-
-### List Keys
-
-```
-aws iam list-access-keys
-```
-
 
 ### List the Access Key IDs for an IAM User
 
@@ -274,14 +265,14 @@ e.g
 aws s3 ls s3://practicalaws.com
 
 aws s3 ls s3://practicalaws.com --region eu-west-1
- 
+
 aws s3 ls s3://practicalaws.com --region eu-west-1 --profile eon01
 ```
 
 ### Syncing a Local Folder with a Bucket
 
 ```
-aws s3 sync <local_path> s3://<bucket_name> 
+aws s3 sync <local_path> s3://<bucket_name>
 ```
 
 e.g
@@ -318,7 +309,7 @@ aws s3 cp <folder_name>/ s3://<bucket_name>/ --recursive
 To exclude files:
 
 ```
-aws s3 cp <folder_name>/ s3://<bucket_name>/ --recursive --exclude "<file_name_or_a_wildcard>" 
+aws s3 cp <folder_name>/ s3://<bucket_name>/ --recursive --exclude "<file_name_or_a_wildcard>"
 ```
 
 e.g: To only include a certain type of files (PNG) and exclude others (JPG)
@@ -330,7 +321,7 @@ aws s3 cp practicalaws.com/ s3://practicalaws-backup/  --recursive --exclude "*.
 e.g: To exclude a folder
 
 ```
-aws s3 cp practicalaws.com/ s3://practicalaws-backup/ --recursive --exclude ".git/*" 
+aws s3 cp practicalaws.com/ s3://practicalaws-backup/ --recursive --exclude ".git/*"
 ```
 
 ### Removing a File from a Bucket
@@ -356,7 +347,7 @@ If the bucket is not empty, use --force.
 e.g
 
 ```
-aws s3 rb s3://practicalaws.com --force  
+aws s3 rb s3://practicalaws.com --force
 ```
 
 ### Emptying a Bucket
@@ -399,7 +390,7 @@ aws ec2 create-vpc --cidr-block 10.0.0.0/16 --region eu-west-1
 aws ec2 modify-vpc-attribute --vpc-id <vpc_id> --enable-dns-hostnames "{\"Value\":true}" --region <region>
 ```
 
-# Subnets 
+# Subnets
 
 ### Creating A Subnet
 
@@ -433,37 +424,37 @@ aws ec2 attach-internet-gateway --internet-gateway-id <igw_id> --vpc-id <vpc_id>
 
 Allocate Elastic IP
 
-``` 
-aws ec2 allocate-address --domain vpc --region <region> 
-``` 
+```
+aws ec2 allocate-address --domain vpc --region <region>
+```
 
 then use the AllocationId to create the NAT Gateway for the public zone in <region>
 
-``` 
-aws ec2 create-nat-gateway --subnet-id <subnet_id> --allocation-id <allocation_id> --region <region> 
+```
+aws ec2 create-nat-gateway --subnet-id <subnet_id> --allocation-id <allocation_id> --region <region>
 ```
 
 # Route Tables
 
 ### Creating A Public Route Table
 
-Create the Route Table: 
+Create the Route Table:
 
-``` 
-aws ec2 create-route-table --vpc-id <vpc_id> --region <region> 
-``` 
+```
+aws ec2 create-route-table --vpc-id <vpc_id> --region <region>
+```
 
-then create a route for an Internet Gateway. 
+then create a route for an Internet Gateway.
 
-Now, use the outputted Route Table ID: 
+Now, use the outputted Route Table ID:
 
-``` 
-aws ec2 create-route --route-table-id <route_table_id> --destination-cidr-block 0.0.0.0/0 --gateway-id <igw_id> --region <region> 
+```
+aws ec2 create-route --route-table-id <route_table_id> --destination-cidr-block 0.0.0.0/0 --gateway-id <igw_id> --region <region>
 ```
 
 Finally, associate the public subnet with the Route Table
 
-``` 
+```
 aws ec2 associate-route-table --route-table-id <route_table_id> --subnet-id <subnet_id> --region <region>
 ```
 
@@ -471,20 +462,20 @@ aws ec2 associate-route-table --route-table-id <route_table_id> --subnet-id <sub
 
 Create the Route Table
 
-``` 
-aws ec2 create-route-table --vpc-id <vpc_id> --region <region> 
-``` 
-
-then create a route that points to a NAT Gateway 
-
-``` 
-aws ec2 create-route --route-table-id <route_table_id> --destination-cidr-block 0.0.0.0/0 --nat-gateway-id <net_gateway_id> --region <region> 
+```
+aws ec2 create-route-table --vpc-id <vpc_id> --region <region>
 ```
 
-Finally, associate the subnet 
+then create a route that points to a NAT Gateway
 
-``` 
-aws ec2 associate-route-table --route-table-id <route_table_id> --subnet-id <subnet_id> --region <region> 
+```
+aws ec2 create-route --route-table-id <route_table_id> --destination-cidr-block 0.0.0.0/0 --nat-gateway-id <net_gateway_id> --region <region>
+```
+
+Finally, associate the subnet
+
+```
+aws ec2 associate-route-table --route-table-id <route_table_id> --subnet-id <subnet_id> --region <region>
 ```
 
 # CloudFront
