@@ -2,7 +2,7 @@
 
 ------
 
-![](/home/eon01/dev/aws_cheat_sheet/banner.png)
+![](./banner.png)
 
 # Table of Contents
 
