@@ -1,8 +1,16 @@
-AWS Cheat Sheet **Work in progress - All contributions are welcome** 
+# AWS CLI Cheat Sheet
+
+------
+
+[TOC]
+
+
 
 # Volumes
 
-### Describing volumes
+
+
+## Describing volumes
 
 ```
 aws ec2 describe-volumes
@@ -42,13 +50,17 @@ This is the generic form. Use --profile ```<your_profile_name> ```, if you have 
 aws ec2 describe-volumes --filters Name:'tag:Name',Values: ['some_values'] --profile <your_profile_name>
 ```
 
-### Describing volumes using a different aws user profile
+
+
+## Describing volumes using a different aws user profile
 
 ```
 aws ec2 describe-volumes --filters  Name=status,Values=in-use  --profile <your_profile_name>
 ```
 
-### Listing Available Volumes IDs
+
+
+## Listing Available Volumes IDs
 
 
 ```
@@ -62,14 +74,16 @@ aws ec2 describe-volumes --filters  Name=status,Values=available  --profile <you
 ```
 
 
-### Deleting a Volume
+
+## Deleting a Volume
 
 ```
 aws ec2 delete-volume --region <region> --volume-id <volume_id>
 ```
 
 
-### Deleting Unused Volumes.. Think Before You Type :-)
+
+## Deleting Unused Volumes.. Think Before You Type :-)
 
 
 ```
@@ -83,7 +97,8 @@ for x in $(aws ec2 describe-volumes --filters  Name=status,Values=available  --p
 ```
 
 
-### Creating a Snapshot
+
+## Creating a Snapshot
 
 ```
 aws ec2 create-snapshot --volume-id <vol-id>
@@ -93,14 +108,17 @@ aws ec2 create-snapshot --volume-id <vol-id>
 aws ec2 create-snapshot --volume-id <vol-id> --description "snapshot-$(date +'%Y-%m-%d_%H-%M-%S')"
 ```
 
-### Creating an Image (AMI)
+
+
+## Creating an Image (AMI)
 
 ```
 aws ec2 create-image --instance-id <instance_id> --name "image-$(date +'%Y-%m-%d_%H-%M-%S')" --description "image-$(date +'%Y-%m-%d_%H-%M-%S')"
 ```
 
 
-### Creating AMI Without Rebooting the Machine
+
+## Creating AMI Without Rebooting the Machine
 
 ```
 aws ec2 create-image --instance-id <instance_id> --name "image-$(date +'%Y-%m-%d_%H-%M-%S')" --description "image-$(date +'%Y-%m-%d_%H-%M-%S')" --no-reboot
@@ -111,13 +129,17 @@ You are free to change the AMI name ``` image-$(date +'%Y-%m-%d_%H-%M-%S') ``` t
 
 # AMIs
 
-### Listing AMI(s)
+
+
+## Listing AMI(s)
 
 ```
 aws ec2 describe-images
 ```
 
-### Describing AMI(s)
+
+
+## Describing AMI(s)
 
 ```
 aws ec2 describe-images --image-ids <image_id> --profile <profile> --region <region>
@@ -129,13 +151,17 @@ e.g:
 aws ec2 describe-images --image-ids ami-e24dfa9f --profile terraform --region eu-west-3
 ```
 
-### Listing Amazon AMIs
+
+
+## Listing Amazon AMIs
 
 ```
 aws ec2 describe-images --owners amazon 
 ```
 
-### Using Filters
+
+
+## Using Filters
 
 e.g: Describing Windows AMIs that are backed by Amazon EBS.
 
@@ -151,70 +177,211 @@ aws ec2 describe-images --filters "Name=name,Values=ubuntu*"
 
 # Lambda
 
-### Using AWS Lambda with Scheduled Events
+
+
+## List Functions
+
+```
+aws lambda list-functions
+```
+
+
+
+## Describe a Function
+
+```
+aws lambda get-function --function-name  my-function
+```
+
+
+
+## Invoke a Function
+
+```
+aws lambda invoke --function-name my-function --payload '{ "name": "Bob" }' response.json
+```
+
+
+
+## Update a Function Code
+
+````
+aws lambda update-function-code --function-name  my-function --zip-file fileb://my-function.zip
+````
+
+
+
+## Publish a Version
+
+```
+aws lambda publish-version --function-name my-function
+```
+
+
+
+## List Layers
+
+Let's take this example in which we want to list information of layers that are compatible with Python 3.7 runtime. 
+
+```
+aws lambda list-layers --compatible-runtime python3.7
+```
+
+Possible layers runtime:
+
+```
+nodejs
+nodejs4.3
+nodejs6.10
+nodejs8.10
+nodejs10.x
+nodejs12.x
+java8
+java8.al2
+java11
+python2.7
+python3.6
+python3.7
+python3.8
+dotnetcore1.0
+dotnetcore2.0
+dotnetcore2.1
+dotnetcore3.1
+nodejs4.3-edge
+go1.x
+ruby2.5
+ruby2.7
+provided
+provided.al2
+```
+
+
+
+## List Aliases of a Function
+
+```
+aws lambda list-aliases --function-name my-function
+```
+
+
+
+## Describe an Alias
+
+```
+aws lambda get-alias --function-name my-function --name LIVE
+```
+
+
+
+## Create an Alias
+
+```
+aws lambda create-alias --function-name my-function --description "alias description goes here" --function-version 1 --name LIVE
+```
+
+
+
+## Delete an Alias
+
+```
+aws lambda delete-alias --function-name my-function --name LIVE
+```
+
+
+
+## List Function Tags
+
+```
+aws lambda list-tags --resource arn:aws:lambda:eu-west-1:xxxxxxxxxxx:function:my-function
+```
+
+
+
+## Delete a Function
+
+````
+aws lambda delete-function --function-name my-function
+````
+
+
+
+## Using AWS Lambda with Scheduled Events
 
 ```
 sid=Sid$(date +%Y%m%d%H%M%S); aws lambda add-permission --statement-id $sid --action 'lambda:InvokeFunction' --principal events.amazonaws.com --source-arn arn:aws:events:<region>:<arn>:rule/AWSLambdaBasicExecutionRole --function-name function:<awsents> --region <region>
 ```
 
+## 
 
 # IAM
 
-### List Users
- 
+
+
+## List Users
+
 ```
 aws iam list-users
 ```
 
 
-### List Policies
+
+## List Policies
 
 ```
 aws iam list-policies
 ```
 
-### List Groups
+
+
+## List Groups
 
 ```
 aws iam list-groups
 ```
 
-### Get Users in a  Group
+
+
+## Get Users in a  Group
 
 ```
 aws iam get-group --group-name <group_name>
 ```
 
 
-### Describing a Policy
+
+## Describing a Policy
 
 ```
 aws iam get-policy --policy-arn arn:aws:iam::aws:policy/<policy_name>
 ```
 
 
-### List Access Keys
+
+## List Access Keys
 
 ```
 aws iam list-access-keys
 ```
 
 
-### List Keys
+
+## List Keys
 
 ```
 aws iam list-access-keys
 ```
 
 
-### List the Access Key IDs for an IAM User
+
+## List the Access Key IDs for an IAM User
 
 ```
 aws iam list-access-keys --user-name <user_name>
 ```
 
 
-### List the SSH Public Keys for a User
+
+## List the SSH Public Keys for a User
 
 ```
 aws iam list-ssh-public-keys --user-name <user_name>
@@ -223,7 +390,9 @@ aws iam list-ssh-public-keys --user-name <user_name>
 
 # S3 API
 
-### Listing Buckets
+
+
+## Listing Buckets
 
 ```
 aws s3api list-buckets
@@ -242,14 +411,17 @@ e.g
 aws s3 ls --profile eon01
 ```
 
-### Listing Only Bucket Names
+
+
+## Listing Only Bucket Names
 
 ```
 aws s3api list-buckets --query 'Buckets[].Name'
 ```
 
 
-### Getting a Bucket Region
+
+## Getting a Bucket Region
 
 ```
 aws s3api get-bucket-location --bucket <bucket_name>
@@ -262,7 +434,8 @@ aws s3api get-bucket-location --bucket practicalaws.com
 ```
 
 
-### Listing the Content of a Bucket
+
+## Listing the Content of a Bucket
 
 ```
 aws s3 ls s3://<bucket_name> --region <region>
@@ -278,7 +451,9 @@ aws s3 ls s3://practicalaws.com --region eu-west-1
 aws s3 ls s3://practicalaws.com --region eu-west-1 --profile eon01
 ```
 
-### Syncing a Local Folder with a Bucket
+
+
+## Syncing a Local Folder with a Bucket
 
 ```
 aws s3 sync <local_path> s3://<bucket_name> 
@@ -290,7 +465,9 @@ e.g
 aws s3 sync . s3://practicalaws.com --region eu-west-1
 ```
 
-### Copying Files
+
+
+## Copying Files
 
 ```
 aws s3 cp <file_name> s3://<bucket_name>
@@ -309,7 +486,9 @@ cd images
 aws s3 cp . s3://saltstackfordevops.com/images --recursive --region us-east-2
 ```
 
-### Copying Folders
+
+
+## Copying Folders
 
 ```
 aws s3 cp <folder_name>/ s3://<bucket_name>/ --recursive
@@ -333,7 +512,9 @@ e.g: To exclude a folder
 aws s3 cp practicalaws.com/ s3://practicalaws-backup/ --recursive --exclude ".git/*" 
 ```
 
-### Removing a File from a Bucket
+
+
+## Removing a File from a Bucket
 
 ```
 aws s3 rm s3://<bucket_name>/<object_name>
@@ -345,7 +526,9 @@ e.g
 aws s3 rm s3://practicalaws.com/temp.txt
 ```
 
-### Deleting a Bucket
+
+
+## Deleting a Bucket
 
 ```
 aws s3 rb s3://<bucket_name> --force
@@ -359,7 +542,9 @@ e.g
 aws s3 rb s3://practicalaws.com --force  
 ```
 
-### Emptying a Bucket
+
+
+## Emptying a Bucket
 
 ```
 aws s3 rm s3://<bucket_name>/<key_name> --recursive
@@ -381,7 +566,9 @@ aws s3 rm s3://practicalaws.com/tempfiles
 
 # VPC
 
-### Creating A VPC
+
+
+## Creating A VPC
 
 ```
 aws ec2 create-vpc --cidr-block <cidr_block> --regiosn <region>
@@ -393,7 +580,9 @@ e.g
 aws ec2 create-vpc --cidr-block 10.0.0.0/16 --region eu-west-1
 ```
 
-### Allowing DNS hostnames
+
+
+## Allowing DNS hostnames
 
 ```
 aws ec2 modify-vpc-attribute --vpc-id <vpc_id> --enable-dns-hostnames "{\"Value\":true}" --region <region>
@@ -401,13 +590,17 @@ aws ec2 modify-vpc-attribute --vpc-id <vpc_id> --enable-dns-hostnames "{\"Value\
 
 # Subnets 
 
-### Creating A Subnet
+
+
+## Creating A Subnet
 
 ```
 aws ec2 create-subnet --vpc-id <vpc_id> --cidr-block <cidr_block> --availability-zone <availability_zone> --region <region>
 ```
 
-### Auto Assigning Public IPs To Instances In A Public Subnet
+
+
+## Auto Assigning Public IPs To Instances In A Public Subnet
 
 ```
 aws ec2 modify-subnet-attribute --subnet-id <subnet_id> --map-public-ip-on-launch --region <region>
@@ -415,13 +608,17 @@ aws ec2 modify-subnet-attribute --subnet-id <subnet_id> --map-public-ip-on-launc
 
 # Internet Gateway
 
-### Creating An IGW
+
+
+## Creating An IGW
 
 ```
 aws ec2 create-internet-gateway --region <region>
 ```
 
-### Attaching An IGW to A VPC
+
+
+## Attaching An IGW to A VPC
 
 ```
 aws ec2 attach-internet-gateway --internet-gateway-id <igw_id> --vpc-id <vpc_id> --region <region>
@@ -429,13 +626,15 @@ aws ec2 attach-internet-gateway --internet-gateway-id <igw_id> --vpc-id <vpc_id>
 
 # NAT
 
-### Setting Up A NAT Gateway
+
+
+## Setting Up A NAT Gateway
 
 Allocate Elastic IP
 
 ``` 
 aws ec2 allocate-address --domain vpc --region <region> 
-``` 
+```
 
 then use the AllocationId to create the NAT Gateway for the public zone in <region>
 
@@ -445,13 +644,15 @@ aws ec2 create-nat-gateway --subnet-id <subnet_id> --allocation-id <allocation_i
 
 # Route Tables
 
-### Creating A Public Route Table
+
+
+## Creating A Public Route Table
 
 Create the Route Table: 
 
 ``` 
 aws ec2 create-route-table --vpc-id <vpc_id> --region <region> 
-``` 
+```
 
 then create a route for an Internet Gateway. 
 
@@ -467,13 +668,15 @@ Finally, associate the public subnet with the Route Table
 aws ec2 associate-route-table --route-table-id <route_table_id> --subnet-id <subnet_id> --region <region>
 ```
 
-### Creating A Private Route Tables
+
+
+## Creating A Private Route Tables
 
 Create the Route Table
 
 ``` 
 aws ec2 create-route-table --vpc-id <vpc_id> --region <region> 
-``` 
+```
 
 then create a route that points to a NAT Gateway 
 
@@ -489,7 +692,9 @@ aws ec2 associate-route-table --route-table-id <route_table_id> --subnet-id <sub
 
 # CloudFront
 
-### Listing Distributions
+
+
+## Listing Distributions
 
 In some cases, you need to setup this first:
 
@@ -503,7 +708,9 @@ Then:
 aws cloudfront list-distributions
 ```
 
-### Invalidating Files From a Distribution
+
+
+## Invalidating Files From a Distribution
 
 To invalidate index and error HTML files from the distribution with the ID Z2W2LX9VBMAPRX:
 
@@ -517,3 +724,196 @@ To invalidate everything in the distribution:
 aws cloudfront create-invalidation --distribution-id Z2W2LX9VBMAPRX  --paths '/*'
 ```
 
+
+
+## Sync a Local Folder with a CLoudFront Distribution
+
+CloudFront is "attached" to a bucket, you need to upload your files to the bucket. 
+
+e.g.:
+
+```
+aws s3 sync . s3://my-bucket.com
+```
+
+If you should keep the files public:
+
+```
+aws s3 sync . s3://my-bucket.com --acl public-read
+```
+
+To copy a single file, you need to:
+
+```
+aws s3 cp file1 s3://my-bucket.com/sub-folder/ --acl <ACL>
+```
+
+
+
+## Sync and Invalidate at the Same Time: 
+
+```
+aws s3 sync . s3://my-bucket.com --acl public-read && aws cloudfront create-invalidation --distribution-id Z2W2LX9VBMAPRX  --paths '/*'
+```
+
+or in case you want to update a single file:
+
+```
+aws s3 cp file1 s3://my-bucket.com/sub-folder/ --acl public-read && aws cloudfront create-invalidation --distribution-id Z2W2LX9VBMAPRX  --paths '/sub-folder/file1'
+```
+
+
+
+# RDS
+
+
+
+## List Databases
+
+```
+aws rds describe-db-instances
+```
+
+or:
+
+```
+aws rds describe-db-instances --query 'DBInstances[].DBInstanceIdentifier'
+```
+
+
+
+## List Public Databases
+
+```
+aws rds describe-db-instances --query 'DBInstances[?PubliclyAccessible=="true"].[DBInstanceIdentifier,Endpoint.Address]'
+```
+
+
+
+## List Non Protected Databases (DeletionProtection)
+
+```
+aws rds describe-db-instances \
+    --query 'DBInstances[*].[DBInstanceIdentifier]' \
+    --output text \
+    | xargs -I {} bash -c 'if [[ $(aws rds describe-db-instances --db-instance-identifier {} --query '"'"'DBInstances[*].DeletionProtection'"'"' --output text) == False ]]; then echo {} ; fi'
+```
+
+
+
+## Describe the Automated Backups for a DB Instance
+
+```
+aws rds describe-db-instance-automated-backups --db-instance-identifier database-mysql
+```
+
+
+
+## Create a DB Cluster
+
+````
+aws rds create-db-cluster \
+    --db-cluster-identifier mysql-cluster \
+    --engine aurora-mysql \
+    --engine-version 5.7.12 \
+    --master-username master \
+    --master-user-password xxxxxx \
+    --db-subnet-group-name default \
+    --vpc-security-group-ids sg-0130572b9daf3dc16
+````
+
+
+
+## Create a DB Instance
+
+```
+aws rds create-db-instance \
+    --db-instance-identifier mysql-instance \
+    --db-instance-class db.t3.micro \
+    --engine mysql \
+    --master-username admin \
+    --master-user-password xxxxx \
+    --allocated-storage 40
+```
+
+
+
+## Create a DB Security Group
+
+```
+aws rds create-db-security-group --db-security-group-name my-security-group --db-security-group-description "My Security Group"
+```
+
+
+
+## Create a Read Replica
+
+````
+aws rds create-db-instance-read-replica \
+    --db-instance-identifier test-instance-repl \
+    --source-db-instance-identifier test-instance
+````
+
+
+
+## Create a Custom DB Cluster Endpoint
+
+```
+aws rds create-db-cluster-endpoint \
+    --db-cluster-endpoint-identifier mycustomendpoint \
+    --endpoint-type reader \
+    --db-cluster-identifier mydbcluster \
+    --static-members dbinstance1 dbinstance2
+```
+
+
+
+## Apply Tag to a DB
+
+```
+aws rds add-tags-to-resource \
+    --resource-name arn:aws:rds:us-east-1:123456789012:db:database-mysql \
+    --tags "[{\"Key\": \"Name\",\"Value\": \"MyDatabase\"},{\"Key\": \"Environment\",\"Value\": \"test\"}]"
+```
+
+
+
+## Create a Cluster Snapshot
+
+```
+aws rds create-db-cluster-snapshot --db-cluster-identifier my-db-cluster --db-cluster-snapshot-identifier my-db-cluster-snapshot
+```
+
+
+
+## Create a CloudWatch Alarm for a DB Instance
+
+e.g.:  When **average CPU for latest 15 minutes is above 90%**
+
+```
+aws cloudwatch put-metric-alarm \
+    --alarm-name "my-alarm" \
+    --metric-name "CPUUtilization" \
+    --namespace "AWS/RDS" \
+    --statistic "Average" \
+    --period 300 \
+    --evaluation-periods 3 \
+    --threshold 90.0 \
+    --comparison-operator "GreaterThanOrEqualToThreshold" \
+    --dimensions "Name=DBInstanceIdentifier,Value=my-db-instance" \
+    --alarm-actions "<arn of sns resource>"
+```
+
+This will monitor the DB instance during a period of 300 seconds (5 minutes) during 3 evaluation periods: 5*3 = 15 minutes.
+
+If in the three periods, the average is equal or more than 90%, then the alarm will trigger the SNS resource.
+
+You should subscribe to the SNS resource you create by email or SMS.
+
+# Connect Deeper
+
+This work was first published in [Practical AWS](https://bf.eralabs.io) course.
+
+Join our online community [FAUN](https://faun.dev/join) and subscribe to our podcast [The DevOps Fauncast](https://faun.dev/podcast).
+
+Visit our publication [The Chief I/O](http://thechief.io/), subscribe to the newsletter and get cloud native insights from our contributors.
