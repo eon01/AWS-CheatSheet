@@ -1020,8 +1020,4 @@ You should subscribe to the SNS resource you create by email or SMS.
 
 # Connect Deeper
 
-This work was first published in [Practical AWS](https://bf.eralabs.io) course.
-
-Join our online community [FAUN](https://faun.dev/join) and subscribe to our podcast [The DevOps Fauncast](https://faun.dev/podcast).
-
-Visit our publication [The Chief I/O](http://thechief.io/), subscribe to the newsletter and get cloud native insights from our contributors.
+Join FAUN developer community [FAUN](https://faun.dev/join)
