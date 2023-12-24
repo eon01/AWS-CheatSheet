@@ -1,11 +1,5 @@
 # AWS CLI Cheat Sheet
 
-------
-
-![](./banner.png)
-
-# Table of Contents
-
    * [Volumes](#volumes)
       * [Describing volumes](#describing-volumes)
       * [Describing volumes using a different aws user profile](#describing-volumes-using-a-different-aws-user-profile)
